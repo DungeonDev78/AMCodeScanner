@@ -1,7 +1,7 @@
 # AMCodeScanner
 A small and configurable Code Scanner for iOS
 
-![Image description](https://github.com/DungeonDev78/AMUISegmentedControl/blob/master/img001.jpg)
+![Image description](https://github.com/DungeonDev78/AMCodeScanner/blob/main/AMCodeScanner_Example/AMCodeScanner_Example/img001.jpg)
 
 ## Installation
 Requirements
