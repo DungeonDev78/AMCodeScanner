@@ -26,6 +26,8 @@ Import AMCodeScanner package to your controller
 import AMCodeScanner
 ```
 
+Add the *Privacy - Camera Usage Description* in your *Info.plist*
+
 In your ViewController (or in its Storyboard) add two UIView, one for the camera preview and a second one, that is optional, for the area of interest where you should search for the code to scan.
 
 Add the scanner property:
