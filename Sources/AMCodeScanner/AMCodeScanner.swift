@@ -9,16 +9,16 @@ import UIKit
 import AVFoundation
 
 // MARK: - PPBCodeScannerDelegate
-protocol AMCodeScannerDelegate: AnyObject {
+public protocol AMCodeScannerDelegate: AnyObject {
     func codeScannerDidReadCode(_ code: String)
     func codeScannerdidFailToReadWithError(_ error: AMCodeScanner.CodeError)
 }
 
-class AMCodeScanner: NSObject {
+public class AMCodeScanner: NSObject {
     
     // MARK: - CodeError
     /// All the possible types of errors that could occur
-    enum CodeError {
+    public enum CodeError {
         case generic
         case captureDevice
         case captureSession
@@ -46,7 +46,7 @@ class AMCodeScanner: NSObject {
     ///   - aoiCornerRadius: the corner radius of the areaOfInterest area
     ///   - typesToScan: the list of the types of scanner needed to read (ie.: QR, code39, dataMatrix, etc...)
     ///   - delegate: the protocol delegate
-    init(cameraView: UIView,
+    public init(cameraView: UIView,
          areaOfInterest: UIView? = nil,
          maskColor: UIColor = .clear,
          aoiCornerRadius: CGFloat = 0,
@@ -77,7 +77,7 @@ class AMCodeScanner: NSObject {
     
     // MARK: - Public functions
     /// Start the scanning sequence
-    func startScanning() {
+    public func startScanning() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(self.didChangeCaptureInputPortFormatDescription(notification:)),
@@ -99,7 +99,7 @@ class AMCodeScanner: NSObject {
     }
     
     /// Stop the scanning sequence
-    func stopScanning() {
+    public func stopScanning() {
         if self.captureSession?.isRunning == true {
             self.captureSession?.stopRunning()
             
@@ -251,7 +251,7 @@ private extension AMCodeScanner {
 // MARK: - AVCaptureMetadataOutputObjectsDelegate
 extension AMCodeScanner: AVCaptureMetadataOutputObjectsDelegate {
     
-    internal func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    public func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
         // Get the metadata object.
         if let metadataObj = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             // Shake baby shake...
