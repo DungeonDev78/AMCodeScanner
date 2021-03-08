@@ -103,7 +103,7 @@ public class AMCodeScanner: NSObject {
         if self.captureSession?.isRunning == true {
             self.captureSession?.stopRunning()
             
-            guard let gVideoPreviewLayer = videoPreviewLayer else {
+            guard videoPreviewLayer != nil else {
                 delegate?.codeScannerdidFailToReadWithError(.generic)
                 return
             }            

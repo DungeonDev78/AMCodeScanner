@@ -1,7 +1,7 @@
 # AMCodeScanner
 A small and configurable Code Scanner for iOS
 
-![Image description](https://github.com/DungeonDev78/AMCodeScanner/blob/main/AMCodeScanner_Example/AMCodeScanner_Example/img001.jpg)
+![Image description](https://github.com/DungeonDev78/AMCodeScanner/blob/main/Images/img001.jpg)
 
 ## Installation
 Requirements
@@ -62,6 +62,21 @@ In the init function, if desired, you can avoid to pass:
 1. *areaOfInterest*: the sensitive scanner area will be the whole camera preview
 2. *maskColor*: the mask color will be clear
 3. *aoiCornerRadius*: the corner radius will be 0
+
+#### Supported codes
+1. UPC-E
+2. Code 39
+3. Code 39 mod 43
+4. EAN-13
+5. EAN-8
+6. Code 93
+7. Code 128
+8. PDF417
+9. QR
+10. Aztec
+11. Interleaved 2 of 5
+12. ITF14
+13. DataMatrix
 
 
 ## Author
