@@ -57,6 +57,44 @@ func stopScanning()
 func startScanning()
 ```
 
+#### Full Example - ViewController
+```swift
+import UIKit
+import AMCodeScanner
+
+class ViewController: UIViewController {
+    
+    // MARK: - Properties
+    @IBOutlet weak private var cameraView: UIView!
+    @IBOutlet weak private var focusView: UIView!
+    private var scanner: AMCodeScanner?
+
+    // MARK: - Lifecycle
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        scanner = AMCodeScanner(cameraView: cameraView,
+                                areaOfInterest: focusView,
+                                maskColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5),
+                                aoiCornerRadius: 10,
+                                typesToScan: [.qr],
+                                delegate: self)
+    }
+}
+
+// MARK: - AMCodeScannerDelegate
+extension ViewController: AMCodeScannerDelegate {
+    
+    func codeScannerDidReadCode(_ code: String) {
+        print(code)
+    }
+    
+    func codeScannerdidFailToReadWithError(_ error: AMCodeScanner.CodeError) {
+        print(error)
+    }
+}
+```
+
 #### Options
 In the init function, if desired, you can avoid to pass: 
 1. *areaOfInterest*: the sensitive scanner area will be the whole camera preview

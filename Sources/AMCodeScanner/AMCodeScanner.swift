@@ -11,7 +11,7 @@ import AVFoundation
 // MARK: - PPBCodeScannerDelegate
 public protocol AMCodeScannerDelegate: AnyObject {
     func codeScannerDidReadCode(_ code: String)
-    func codeScannerdidFailToReadWithError(_ error: AMCodeScanner.CodeError)
+    func codeScannerDidFailToReadWithError(_ error: AMCodeScanner.CodeError)
 }
 
 public class AMCodeScanner: NSObject {
@@ -90,7 +90,7 @@ public class AMCodeScanner: NSObject {
                 if granted {
                     self.startRunningCaptureSession()
                 } else {
-                    self.delegate?.codeScannerdidFailToReadWithError(.cameraPermissionNotGranted)
+                    self.delegate?.codeScannerDidFailToReadWithError(.cameraPermissionNotGranted)
                 }
             })
         }
@@ -104,7 +104,7 @@ public class AMCodeScanner: NSObject {
             self.captureSession?.stopRunning()
             
             guard videoPreviewLayer != nil else {
-                delegate?.codeScannerdidFailToReadWithError(.generic)
+                delegate?.codeScannerDidFailToReadWithError(.generic)
                 return
             }            
         }
@@ -130,7 +130,7 @@ private extension AMCodeScanner {
         
         do {
             guard let gCaptureDevice = captureDevice else {
-                delegate?.codeScannerdidFailToReadWithError(.captureDevice)
+                delegate?.codeScannerDidFailToReadWithError(.captureDevice)
                 return
             }
             
@@ -146,7 +146,7 @@ private extension AMCodeScanner {
             captureMetadataOutput.metadataObjectTypes = typesToScan
             
             guard let gCaptureSession = captureSession else {
-                delegate?.codeScannerdidFailToReadWithError(.captureSession)
+                delegate?.codeScannerDidFailToReadWithError(.captureSession)
                 return
             }
             
@@ -154,7 +154,7 @@ private extension AMCodeScanner {
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             
             guard let gVideoPreviewLayer = videoPreviewLayer else {
-                delegate?.codeScannerdidFailToReadWithError(.generic)
+                delegate?.codeScannerDidFailToReadWithError(.generic)
                 return
             }
             
@@ -172,7 +172,7 @@ private extension AMCodeScanner {
             if AVCaptureDevice.authorizationStatus(for: .video) !=  .authorized {
                 error = .cameraPermissionNotGranted
             }
-            delegate?.codeScannerdidFailToReadWithError(error)
+            delegate?.codeScannerDidFailToReadWithError(error)
             return
         }
     }
