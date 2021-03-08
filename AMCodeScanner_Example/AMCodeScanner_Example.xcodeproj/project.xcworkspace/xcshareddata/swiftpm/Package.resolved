@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AMCodeScanner",
+        "repositoryURL": "https://github.com/DungeonDev78/AMCodeScanner.git",
+        "state": {
+          "branch": null,
+          "revision": "655ac04d21ec19c1aa6c713b460992f8623ffad9",
+          "version": "1.0.0"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

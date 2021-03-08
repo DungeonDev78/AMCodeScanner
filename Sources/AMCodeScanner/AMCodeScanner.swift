@@ -106,9 +106,7 @@ public class AMCodeScanner: NSObject {
             guard let gVideoPreviewLayer = videoPreviewLayer else {
                 delegate?.codeScannerdidFailToReadWithError(.generic)
                 return
-            }
-            
-            gVideoPreviewLayer.removeFromSuperlayer()
+            }            
         }
     }
 }
