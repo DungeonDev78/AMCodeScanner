@@ -52,12 +52,7 @@ scanner = AMCodeScanner(
         }
     })
 ```
-
-Implement the two functions of **AMCodeScannerDelegate**:
-```swift
-func codeScannerDidReadCode(_ code: String)
-func codeScannerdidFailToReadWithError(_ error: AMCodeScanner.CodeError)
-```
+The completion handler will handle the result of the reading.
 
 If you need to stop or restart your reader, use the functions:
 ```swift
