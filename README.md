@@ -37,12 +37,20 @@ var scanner: AMCodeScanner?
 
 In viewWillAppear init the code reader:
 ```swift
-scanner = AMCodeScanner(cameraView: cameraView,
-                        areaOfInterest: focusView,
-                        maskColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5),
-                        aoiCornerRadius: 10,
-                        typesToScan: [.qr],
-                        delegate: self)
+scanner = AMCodeScanner(
+    cameraView: cameraView,
+    areaOfInterest: focusView,
+    maskColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5),
+    aoiCornerRadius: 10,
+    typesToScan: [.qr, .code128, .dataMatrix],
+    completion: { result in
+        switch result {
+        case .success(let code):
+            print("Code scaned: \(code)")
+        case .failure(let error):
+            print(error)
+        }
+    })
 ```
 
 Implement the two functions of **AMCodeScannerDelegate**:
@@ -73,24 +81,20 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        scanner = AMCodeScanner(cameraView: cameraView,
-                                areaOfInterest: focusView,
-                                maskColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5),
-                                aoiCornerRadius: 10,
-                                typesToScan: [.qr],
-                                delegate: self)
-    }
-}
-
-// MARK: - AMCodeScannerDelegate
-extension ViewController: AMCodeScannerDelegate {
-    
-    func codeScannerDidReadCode(_ code: String) {
-        print(code)
-    }
-    
-    func codeScannerdidFailToReadWithError(_ error: AMCodeScanner.CodeError) {
-        print(error)
+        scanner = AMCodeScanner(
+            cameraView: cameraView,
+            areaOfInterest: focusView,
+            maskColor: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.5),
+            aoiCornerRadius: 10,
+            typesToScan: [.qr, .code128, .dataMatrix],
+            completion: { result in
+                switch result {
+                case .success(let code):
+                    print("Code scaned: \(code)")
+                case .failure(let error):
+                    print(error)
+                }
+            })
     }
 }
 ```
