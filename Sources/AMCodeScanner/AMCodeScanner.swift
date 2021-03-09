@@ -8,17 +8,14 @@
 import UIKit
 import AVFoundation
 
-// MARK: - PPBCodeScannerDelegate
-public protocol AMCodeScannerDelegate: AnyObject {
-    func codeScannerDidReadCode(_ code: String)
-    func codeScannerDidFailToReadWithError(_ error: AMCodeScanner.CodeError)
-}
-
 public class AMCodeScanner: NSObject {
+    
+    // MARK: - Typealias
+    public typealias AMCodeScannerCompletion = (Result<String, AMCodeScanner.CodeError>) -> Void
     
     // MARK: - CodeError
     /// All the possible types of errors that could occur
-    public enum CodeError {
+    public enum CodeError: Error {
         case generic
         case captureDevice
         case captureSession
@@ -29,7 +26,7 @@ public class AMCodeScanner: NSObject {
     private var cameraView: UIView
     private var areaOfInterest: UIView
     private var typesToScan: [AVMetadataObject.ObjectType]
-    private weak var delegate: AMCodeScannerDelegate?
+    private var completion: AMCodeScannerCompletion
     
     private var captureSession: AVCaptureSession?
     private var videoPreviewLayer: AVCaptureVideoPreviewLayer?
@@ -45,19 +42,19 @@ public class AMCodeScanner: NSObject {
     ///   - maskColor: the color of the area ouside the areaOfInterest
     ///   - aoiCornerRadius: the corner radius of the areaOfInterest area
     ///   - typesToScan: the list of the types of scanner needed to read (ie.: QR, code39, dataMatrix, etc...)
-    ///   - delegate: the protocol delegate
+    ///   - completion: the completion handler
     public init(cameraView: UIView,
          areaOfInterest: UIView? = nil,
          maskColor: UIColor = .clear,
          aoiCornerRadius: CGFloat = 0,
          typesToScan: [AVMetadataObject.ObjectType],
-         delegate: AMCodeScannerDelegate) {
+         completion: @escaping AMCodeScannerCompletion) {
         self.cameraView = cameraView
         self.areaOfInterest = areaOfInterest ?? cameraView
         self.maskColor = maskColor
         self.aoiCornerRadius = aoiCornerRadius
         self.typesToScan = typesToScan
-        self.delegate = delegate
+        self.completion = completion
         
         super.init()
         // Start to listen for orentation changes
@@ -86,11 +83,11 @@ public class AMCodeScanner: NSObject {
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
             startRunningCaptureSession()
         } else {
-            AVCaptureDevice.requestAccess(for: .video, completionHandler: { (granted: Bool) in
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: { [weak self] (granted: Bool) in
                 if granted {
-                    self.startRunningCaptureSession()
+                    self?.startRunningCaptureSession()
                 } else {
-                    self.delegate?.codeScannerDidFailToReadWithError(.cameraPermissionNotGranted)
+                    self?.completion(.failure(.cameraPermissionNotGranted))
                 }
             })
         }
@@ -104,7 +101,7 @@ public class AMCodeScanner: NSObject {
             self.captureSession?.stopRunning()
             
             guard videoPreviewLayer != nil else {
-                delegate?.codeScannerDidFailToReadWithError(.generic)
+                completion(.failure(.generic))
                 return
             }            
         }
@@ -130,7 +127,7 @@ private extension AMCodeScanner {
         
         do {
             guard let gCaptureDevice = captureDevice else {
-                delegate?.codeScannerDidFailToReadWithError(.captureDevice)
+                completion(.failure(.captureDevice))
                 return
             }
             
@@ -146,7 +143,7 @@ private extension AMCodeScanner {
             captureMetadataOutput.metadataObjectTypes = typesToScan
             
             guard let gCaptureSession = captureSession else {
-                delegate?.codeScannerDidFailToReadWithError(.captureSession)
+                completion(.failure(.captureSession))
                 return
             }
             
@@ -154,7 +151,7 @@ private extension AMCodeScanner {
             videoPreviewLayer?.videoGravity = AVLayerVideoGravity.resizeAspectFill
             
             guard let gVideoPreviewLayer = videoPreviewLayer else {
-                delegate?.codeScannerDidFailToReadWithError(.generic)
+                completion(.failure(.generic))
                 return
             }
             
@@ -172,7 +169,7 @@ private extension AMCodeScanner {
             if AVCaptureDevice.authorizationStatus(for: .video) !=  .authorized {
                 error = .cameraPermissionNotGranted
             }
-            delegate?.codeScannerDidFailToReadWithError(error)
+            completion(.failure(error))
             return
         }
     }
@@ -254,7 +251,7 @@ extension AMCodeScanner: AVCaptureMetadataOutputObjectsDelegate {
         if let metadataObj = metadataObjects.first as? AVMetadataMachineReadableCodeObject {
             // Shake baby shake...
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            self.delegate?.codeScannerDidReadCode(metadataObj.stringValue ?? "---")
+            completion(.success(metadataObj.stringValue ?? "---"))
         }
     }
 }
