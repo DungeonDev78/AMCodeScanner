@@ -85,7 +85,7 @@ class ViewController: UIViewController {
             completion: { result in
                 switch result {
                 case .success(let code):
-                    print("Code scaned: \(code)")
+                    print("Code scanned: \(code)")
                 case .failure(let error):
                     print(error)
                 }
